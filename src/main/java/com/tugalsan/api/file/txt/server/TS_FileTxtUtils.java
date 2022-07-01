@@ -10,6 +10,7 @@ import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.stream.client.*;
 import com.tugalsan.api.string.client.*;
+import com.tugalsan.api.unsafe.client.*;
 
 public class TS_FileTxtUtils {
 
@@ -25,12 +26,10 @@ public class TS_FileTxtUtils {
     }
 
     public static String toBase64(Path sourceFile) {
-        try {
+        return TGS_UnSafe.compile(() -> {
             var bytes = Files.readAllBytes(sourceFile);
             return TS_FileTxtUtils.toBase64(bytes);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     public static byte[] toByteArrayFromBase64(String sourceBase64) {
@@ -38,12 +37,10 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFileFromBase64(String sourceBase64, Path destFile) {
-        try {
+        return TGS_UnSafe.compile(() -> {
             var bytes = toByteArrayFromBase64(sourceBase64);
             return Files.write(destFile, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     //FILE-READER----------------------------------------------------------------------
@@ -52,12 +49,7 @@ public class TS_FileTxtUtils {
     }
 
     public static String toString(Path sourceFile, Charset charset) {
-        try {
-            d.ci("toString", "sourceFile", sourceFile);
-            return Files.readString(sourceFile, charset);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return TGS_UnSafe.compile(() -> Files.readString(sourceFile, charset));
     }
 
     public static List<String> toList(Path sourceFile) {
@@ -65,11 +57,7 @@ public class TS_FileTxtUtils {
     }
 
     public static List<String> toList(Path sourceFile, Charset charset) {
-        try { 
-            return TGS_ListUtils.of(Files.readAllLines(sourceFile, charset));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return TGS_UnSafe.compile(() -> TGS_ListUtils.of(Files.readAllLines(sourceFile, charset)));
     }
 
     //FILE-WRITER----------------------------------------------------------------------
@@ -78,8 +66,8 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFile(CharSequence sourceText, Path destFile, boolean append, Charset charset, boolean withUTF8BOM, boolean windowsCompatable) {
-        var sourceTextStr = sourceText.toString();
-        try {
+        return TGS_UnSafe.compile(() -> {
+            var sourceTextStr = sourceText.toString();
             if (!append) {
                 TS_FileUtils.deleteFileIfExists(destFile);
             }
@@ -90,9 +78,7 @@ public class TS_FileTxtUtils {
             Files.writeString(destFile, withUTF8BOM ? new String(getUTF8BOM()) + sourceTextStr : sourceTextStr,
                     charset, StandardOpenOption.CREATE, append ? StandardOpenOption.APPEND : StandardOpenOption.WRITE);
             return destFile;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     public static Path toFile(List<String> sourceTexts, Path destFile, boolean append) {
@@ -100,11 +86,11 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFile(List<String> sourceTexts, Path destFile, boolean append, Charset charset, boolean withUTF8BOM) {
-        try {
+        return TGS_UnSafe.compile(() -> {
             if (!append) {//DO NOT DELETE THE CODEIT IS NEEDED
                 TS_FileUtils.deleteFileIfExists(destFile);
                 if (TS_FileUtils.isExistFile(destFile)) {
-                    throw new RuntimeException("Cannot Delete File " + destFile);
+                    TGS_UnSafe.catchMeIfUCan(d.className, "toFile", "Cannot Delete File " + destFile);
                 }
             }
             IntStream.range(0, sourceTexts.size()).forEachOrdered(i -> {
@@ -118,9 +104,7 @@ public class TS_FileTxtUtils {
             }
             Files.write(destFile, sourceTexts, charset, StandardOpenOption.CREATE, append ? StandardOpenOption.APPEND : StandardOpenOption.WRITE);
             return destFile;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     //FILE MERGER--------------------------------------
