@@ -14,7 +14,7 @@ import com.tugalsan.api.unsafe.client.*;
 
 public class TS_FileTxtUtils {
 
-    final private static TS_Log d = TS_Log.of(TS_FileTxtUtils.class.getSimpleName());
+    final private static TS_Log d = TS_Log.of(TS_FileTxtUtils.class);
 
     public static byte[] getUTF8BOM() {
         return new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
