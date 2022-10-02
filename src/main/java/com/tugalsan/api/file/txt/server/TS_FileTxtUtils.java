@@ -121,7 +121,7 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFile(List<Path> sourceTexts, int fromIdx, int toIdx, Path destFile, Charset charset, boolean withUTF8BOM) {
-        var filteredSourceTexts = TGS_StreamUtils.toList(
+        var filteredSourceTexts = TGS_StreamUtils.toLst(
                 IntStream.range(fromIdx, toIdx).mapToObj(i -> toString(sourceTexts.get(i), charset))
         );
         if (withUTF8BOM) {
