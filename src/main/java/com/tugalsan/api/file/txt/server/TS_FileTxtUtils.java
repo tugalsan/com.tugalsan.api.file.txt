@@ -26,7 +26,7 @@ public class TS_FileTxtUtils {
     }
 
     public static String toBase64(Path sourceFile) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var bytes = Files.readAllBytes(sourceFile);
             return TS_FileTxtUtils.toBase64(bytes);
         });
@@ -37,7 +37,7 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFileFromBase64(String sourceBase64, Path destFile) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var bytes = toByteArrayFromBase64(sourceBase64);
             return Files.write(destFile, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         });
@@ -49,7 +49,7 @@ public class TS_FileTxtUtils {
     }
 
     public static String toString(Path sourceFile, Charset charset) {
-        return TGS_UnSafe.compile(() -> Files.readString(sourceFile, charset));
+        return TGS_UnSafe.call(() -> Files.readString(sourceFile, charset));
     }
 
     public static List<String> toList(Path sourceFile) {
@@ -57,7 +57,7 @@ public class TS_FileTxtUtils {
     }
 
     public static List<String> toList(Path sourceFile, Charset charset) {
-        return TGS_UnSafe.compile(() -> TGS_ListUtils.of(Files.readAllLines(sourceFile, charset)));
+        return TGS_UnSafe.call(() -> TGS_ListUtils.of(Files.readAllLines(sourceFile, charset)));
     }
 
     //FILE-WRITER----------------------------------------------------------------------
@@ -66,7 +66,7 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFile(CharSequence sourceText, Path destFile, boolean append, Charset charset, boolean withUTF8BOM, boolean windowsCompatable) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             var sourceTextStr = sourceText.toString();
             if (!append) {
                 TS_FileUtils.deleteFileIfExists(destFile);
@@ -86,11 +86,11 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFile(List<String> sourceTexts, Path destFile, boolean append, Charset charset, boolean withUTF8BOM) {
-        return TGS_UnSafe.compile(() -> {
+        return TGS_UnSafe.call(() -> {
             if (!append) {//DO NOT DELETE THE CODEIT IS NEEDED
                 TS_FileUtils.deleteFileIfExists(destFile);
                 if (TS_FileUtils.isExistFile(destFile)) {
-                    TGS_UnSafe.catchMeIfUCan(d.className, "toFile", "Cannot Delete File " + destFile);
+                    TGS_UnSafe.thrw(d.className, "toFile", "Cannot Delete File " + destFile);
                 }
             }
             IntStream.range(0, sourceTexts.size()).forEachOrdered(i -> {
