@@ -20,29 +20,6 @@ public class TS_FileTxtUtils {
         return new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
     }
 
-    //BASE64
-    public static String toBase64(byte[] sourceBytes) {
-        return Base64.getEncoder().encodeToString(sourceBytes);
-    }
-
-    public static String toBase64(Path sourceFile) {
-        return TGS_UnSafe.call(() -> {
-            var bytes = Files.readAllBytes(sourceFile);
-            return TS_FileTxtUtils.toBase64(bytes);
-        });
-    }
-
-    public static byte[] toByteArrayFromBase64(String sourceBase64) {
-        return Base64.getDecoder().decode(sourceBase64);
-    }
-
-    public static Path toFileFromBase64(String sourceBase64, Path destFile) {
-        return TGS_UnSafe.call(() -> {
-            var bytes = toByteArrayFromBase64(sourceBase64);
-            return Files.write(destFile, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-        });
-    }
-
     //FILE-READER----------------------------------------------------------------------
     public static String toString(Path sourceFile) {
         return toString(sourceFile, StandardCharsets.UTF_8);
