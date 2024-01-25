@@ -77,7 +77,7 @@ public class TS_FileTxtUtils {
                 sourceTexts.set(i, sourceText);
             });
             if (withUTF8BOM) {
-                sourceTexts.set(0, getUTF8BOM() + sourceTexts.get(0));
+                sourceTexts.set(0, new String(getUTF8BOM()) + sourceTexts.get(0));
             }
             Files.write(destFile, sourceTexts, charset, StandardOpenOption.CREATE, append ? StandardOpenOption.APPEND : StandardOpenOption.WRITE);
             return destFile;
