@@ -114,7 +114,7 @@ public class TS_FileTxtUtils {
         var u_filteredSourceTexts = TGS_StreamUtils.toLst(
                 IntStream.range(fromIdx, toIdx).mapToObj(i -> toString(sourceTexts.get(i), charset))
         );
-        var error = u_filteredSourceTexts.stream().filter(fst -> fst.isError()).findAny().orElse(null);
+        var error = u_filteredSourceTexts.stream().filter(fst -> fst.isExcuse()).findAny().orElse(null);
         if (error != null) {
             return TGS_Union.ofExcuse(error.excuse());
         }
