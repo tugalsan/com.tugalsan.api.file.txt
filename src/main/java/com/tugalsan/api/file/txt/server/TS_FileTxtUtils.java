@@ -10,8 +10,8 @@ import com.tugalsan.api.file.server.*;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.stream.client.*;
 import com.tugalsan.api.string.client.*;
-import com.tugalsan.api.union.client.TGS_Union;
 import com.tugalsan.api.union.client.TGS_UnionExcuse;
+import com.tugalsan.api.union.client.TGS_UnionExcuseVoid;
 import java.io.IOException;
 
 public class TS_FileTxtUtils {
@@ -23,36 +23,36 @@ public class TS_FileTxtUtils {
     }
 
     //FILE-READER----------------------------------------------------------------------
-    public static TGS_Union<String> toString(Path sourceFile) {
+    public static TGS_UnionExcuse<String> toString(Path sourceFile) {
         return toString(sourceFile, StandardCharsets.UTF_8);
     }
 
-    public static TGS_Union<String> toString(Path sourceFile, Charset charset) {
+    public static TGS_UnionExcuse<String> toString(Path sourceFile, Charset charset) {
         try {
-            return TGS_Union.of(Files.readString(sourceFile, charset));
+            return TGS_UnionExcuse.of(Files.readString(sourceFile, charset));
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
-    public static TGS_Union<List<String>> toList(Path sourceFile) {
+    public static TGS_UnionExcuse<List<String>> toList(Path sourceFile) {
         return toList(sourceFile, StandardCharsets.UTF_8);
     }
 
-    public static TGS_Union<List<String>> toList(Path sourceFile, Charset charset) {
+    public static TGS_UnionExcuse<List<String>> toList(Path sourceFile, Charset charset) {
         try {
-            return TGS_Union.of(TGS_ListUtils.of(Files.readAllLines(sourceFile, charset)));
+            return TGS_UnionExcuse.of(TGS_ListUtils.of(Files.readAllLines(sourceFile, charset)));
         } catch (IOException ex) {
-            return TGS_Union.ofExcuse(ex);
+            return TGS_UnionExcuse.ofExcuse(ex);
         }
     }
 
     //FILE-WRITER----------------------------------------------------------------------
-    public static TGS_UnionExcuse toFile(CharSequence sourceText, Path destFile, boolean append) {
+    public static TGS_UnionExcuseVoid toFile(CharSequence sourceText, Path destFile, boolean append) {
         return toFile(sourceText, destFile, append, StandardCharsets.UTF_8, false, true);
     }
 
-    public static TGS_UnionExcuse toFile(CharSequence sourceText, Path destFile, boolean append, Charset charset, boolean withUTF8BOM, boolean windowsCompatable) {
+    public static TGS_UnionExcuseVoid toFile(CharSequence sourceText, Path destFile, boolean append, Charset charset, boolean withUTF8BOM, boolean windowsCompatable) {
         try {
             var sourceTextStr = sourceText.toString();
             if (!append) {
@@ -65,24 +65,24 @@ public class TS_FileTxtUtils {
             var result = Files.writeString(destFile, withUTF8BOM ? new String(getUTF8BOM()) + sourceTextStr : sourceTextStr,
                     charset, StandardOpenOption.CREATE, append ? StandardOpenOption.APPEND : StandardOpenOption.WRITE);
             if (result == null) {
-                return TGS_UnionExcuse.ofExcuse(d.className, "toFile", "result return null");
+                return TGS_UnionExcuseVoid.ofExcuse(d.className, "toFile", "result return null");
             }
-            return TGS_UnionExcuse.ofVoid();
+            return TGS_UnionExcuseVoid.ofVoid();
         } catch (UnsupportedOperationException | SecurityException | IllegalArgumentException | IOException ex) {
-            return TGS_UnionExcuse.ofExcuse(ex);
+            return TGS_UnionExcuseVoid.ofExcuse(ex);
         }
     }
 
-    public static TGS_UnionExcuse toFile(List<String> sourceTexts, Path destFile, boolean append) {
+    public static TGS_UnionExcuseVoid toFile(List<String> sourceTexts, Path destFile, boolean append) {
         return toFile(sourceTexts, destFile, append, StandardCharsets.UTF_8, false);
     }
 
-    public static TGS_UnionExcuse toFile(List<String> sourceTexts, Path destFile, boolean append, Charset charset, boolean withUTF8BOM) {
+    public static TGS_UnionExcuseVoid toFile(List<String> sourceTexts, Path destFile, boolean append, Charset charset, boolean withUTF8BOM) {
         try {
             if (!append) {//DO NOT DELETE THE CODEIT IS NEEDED
                 TS_FileUtils.deleteFileIfExists(destFile);
                 if (TS_FileUtils.isExistFile(destFile)) {
-                    return TGS_UnionExcuse.ofExcuse(d.className, "toFile", "Cannot Delete File " + destFile);
+                    return TGS_UnionExcuseVoid.ofExcuse(d.className, "toFile", "Cannot Delete File " + destFile);
                 }
             }
             IntStream.range(0, sourceTexts.size()).forEachOrdered(i -> {
@@ -96,34 +96,34 @@ public class TS_FileTxtUtils {
             }
             var resultPath = Files.write(destFile, sourceTexts, charset, StandardOpenOption.CREATE, append ? StandardOpenOption.APPEND : StandardOpenOption.WRITE);
             if (resultPath == null) {
-                return TGS_UnionExcuse.ofExcuse(d.className, "toFile", "result is null");
+                return TGS_UnionExcuseVoid.ofExcuse(d.className, "toFile", "result is null");
             }
-            return TGS_UnionExcuse.ofVoid();
+            return TGS_UnionExcuseVoid.ofVoid();
         } catch (IOException ex) {
-            return TGS_UnionExcuse.ofExcuse(ex);
+            return TGS_UnionExcuseVoid.ofExcuse(ex);
         }
     }
 
     //FILE MERGER--------------------------------------
-    public static TGS_UnionExcuse toFile(List<Path> sourceTexts, Path destFile) {
+    public static TGS_UnionExcuseVoid toFile(List<Path> sourceTexts, Path destFile) {
         return toFile(sourceTexts, destFile, StandardCharsets.UTF_8);
     }
 
-    public static TGS_UnionExcuse toFile(List<Path> sourceTexts, Path destFile, Charset charset) {
+    public static TGS_UnionExcuseVoid toFile(List<Path> sourceTexts, Path destFile, Charset charset) {
         return toFile(sourceTexts, 0, sourceTexts.size(), destFile, charset, false);
     }
 
-    public static TGS_UnionExcuse toFile(List<Path> sourceTexts, int fromIdx, int toIdx, Path destFile) {
+    public static TGS_UnionExcuseVoid toFile(List<Path> sourceTexts, int fromIdx, int toIdx, Path destFile) {
         return toFile(sourceTexts, fromIdx, toIdx, destFile, StandardCharsets.UTF_8, false);
     }
 
-    public static TGS_UnionExcuse toFile(List<Path> sourceTexts, int fromIdx, int toIdx, Path destFile, Charset charset, boolean withUTF8BOM) {
+    public static TGS_UnionExcuseVoid toFile(List<Path> sourceTexts, int fromIdx, int toIdx, Path destFile, Charset charset, boolean withUTF8BOM) {
         var u_filteredSourceTexts = TGS_StreamUtils.toLst(
                 IntStream.range(fromIdx, toIdx).mapToObj(i -> toString(sourceTexts.get(i), charset))
         );
         var error = u_filteredSourceTexts.stream().filter(fst -> fst.isExcuse()).findAny().orElse(null);
         if (error != null) {
-            return TGS_UnionExcuse.ofExcuse(error.excuse());
+            return TGS_UnionExcuseVoid.ofExcuse(error.excuse());
         }
         var filteredSourceTexts = TGS_StreamUtils.toLst(
                 u_filteredSourceTexts.stream()
