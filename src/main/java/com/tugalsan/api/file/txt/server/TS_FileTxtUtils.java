@@ -29,7 +29,11 @@ public class TS_FileTxtUtils {
 
     public static TGS_UnionExcuse<String> toString(Path sourceFile, Charset charset) {
         try {
-            return TGS_UnionExcuse.of(Files.readString(sourceFile, charset));
+            var text = Files.readString(sourceFile, charset);
+            if (TGS_StringUtils.isNullOrEmpty(text)) {
+                return TGS_UnionExcuse.ofExcuse(d.className, "toString", "TGS_StringUtils.isNullOrEmpty(text)");
+            }
+            return TGS_UnionExcuse.of(text);
         } catch (IOException ex) {
             return TGS_UnionExcuse.ofExcuse(ex);
         }
