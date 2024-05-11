@@ -43,10 +43,8 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFile(CharSequence sourceText, Path destFile, boolean append, Charset charset, boolean withUTF8BOM, boolean windowsCompatable) {
-        if (append && !TS_FileUtils.isExistFile(destFile)) {
-            TS_FileUtils.createFile(destFile);
-        }
         return TGS_UnSafe.call(() -> {
+            TS_DirectoryUtils.createDirectoriesIfNotExists(destFile.getParent());
             var sourceTextStr = sourceText.toString();
             if (!append) {
                 TS_FileUtils.deleteFileIfExists(destFile);
@@ -67,6 +65,7 @@ public class TS_FileTxtUtils {
 
     public static Path toFile(List<String> sourceTexts, Path destFile, boolean append, Charset charset, boolean withUTF8BOM) {
         return TGS_UnSafe.call(() -> {
+            TS_DirectoryUtils.createDirectoriesIfNotExists(destFile.getParent());
             if (!append) {//DO NOT DELETE THE CODEIT IS NEEDED
                 TS_FileUtils.deleteFileIfExists(destFile);
                 if (TS_FileUtils.isExistFile(destFile)) {
@@ -101,6 +100,7 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFile(List<Path> sourceTexts, int fromIdx, int toIdx, Path destFile, Charset charset, boolean withUTF8BOM) {
+        TS_DirectoryUtils.createDirectoriesIfNotExists(destFile.getParent());
         var filteredSourceTexts = TGS_StreamUtils.toLst(
                 IntStream.range(fromIdx, toIdx).mapToObj(i -> toString(sourceTexts.get(i), charset))
         );
