@@ -43,6 +43,9 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFile(CharSequence sourceText, Path destFile, boolean append, Charset charset, boolean withUTF8BOM, boolean windowsCompatable) {
+        if (append && !TS_FileUtils.isExistFile(destFile)) {
+            TS_FileUtils.createFile(destFile);
+        }
         return TGS_UnSafe.call(() -> {
             var sourceTextStr = sourceText.toString();
             if (!append) {
