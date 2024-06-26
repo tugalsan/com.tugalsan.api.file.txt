@@ -105,7 +105,7 @@ public class TS_FileTxtUtils {
                 IntStream.range(fromIdx, toIdx).mapToObj(i -> toString(sourceTexts.get(i), charset))
         );
         if (withUTF8BOM) {
-            filteredSourceTexts.set(0, TGS_StringUtils.concat(String.valueOf(getUTF8BOM()), filteredSourceTexts.get(0)));
+            filteredSourceTexts.set(0, TGS_StringUtils.cmn().concat(String.valueOf(getUTF8BOM()), filteredSourceTexts.get(0)));
         }
         return toFile(filteredSourceTexts, destFile, false);
     }
