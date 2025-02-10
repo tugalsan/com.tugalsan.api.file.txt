@@ -7,10 +7,12 @@ import java.util.*;
 import java.util.stream.*;
 import com.tugalsan.api.log.server.*;
 import com.tugalsan.api.file.server.*;
+import com.tugalsan.api.function.client.maythrow.checkedexceptions.TGS_FuncMTCEUtils;
+import com.tugalsan.api.function.client.maythrow.uncheckedexceptions.TGS_FuncMTUCEUtils;
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.stream.client.*;
 import com.tugalsan.api.string.client.*;
-import com.tugalsan.api.unsafe.client.*;
+
 
 public class TS_FileTxtUtils {
 
@@ -26,7 +28,7 @@ public class TS_FileTxtUtils {
     }
 
     public static String toString(Path sourceFile, Charset charset) {
-        return TGS_UnSafe.call(() -> Files.readString(sourceFile, charset));
+        return TGS_FuncMTCEUtils.call(() -> Files.readString(sourceFile, charset));
     }
 
     public static List<String> toList(Path sourceFile) {
@@ -34,7 +36,7 @@ public class TS_FileTxtUtils {
     }
 
     public static List<String> toList(Path sourceFile, Charset charset) {
-        return TGS_UnSafe.call(() -> TGS_ListUtils.of(Files.readAllLines(sourceFile, charset)));
+        return TGS_FuncMTCEUtils.call(() -> TGS_ListUtils.of(Files.readAllLines(sourceFile, charset)));
     }
 
     //FILE-WRITER----------------------------------------------------------------------
@@ -43,7 +45,7 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFile(CharSequence sourceText, Path destFile, boolean append, Charset charset, boolean withUTF8BOM, boolean windowsCompatable) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             TS_DirectoryUtils.createDirectoriesIfNotExists(destFile.getParent());
             var sourceTextStr = sourceText.toString();
             if (!append) {
@@ -64,12 +66,12 @@ public class TS_FileTxtUtils {
     }
 
     public static Path toFile(List<String> sourceTexts, Path destFile, boolean append, Charset charset, boolean withUTF8BOM) {
-        return TGS_UnSafe.call(() -> {
+        return TGS_FuncMTCEUtils.call(() -> {
             TS_DirectoryUtils.createDirectoriesIfNotExists(destFile.getParent());
             if (!append) {//DO NOT DELETE THE CODEIT IS NEEDED
                 TS_FileUtils.deleteFileIfExists(destFile);
                 if (TS_FileUtils.isExistFile(destFile)) {
-                    TGS_UnSafe.thrw(d.className, "toFile", "Cannot Delete File " + destFile);
+                    TGS_FuncMTUCEUtils.thrw(d.className, "toFile", "Cannot Delete File " + destFile);
                 }
             }
             IntStream.range(0, sourceTexts.size()).forEachOrdered(i -> {
