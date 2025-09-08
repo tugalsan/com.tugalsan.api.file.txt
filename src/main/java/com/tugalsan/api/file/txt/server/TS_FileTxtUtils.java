@@ -13,10 +13,16 @@ import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.stream.client.*;
 import com.tugalsan.api.string.client.*;
 
-
 public class TS_FileTxtUtils {
 
-    final private static TS_Log d = TS_Log.of(TS_FileTxtUtils.class);
+    private TS_FileTxtUtils() {
+
+    }
+
+    private static TS_Log d() {
+        return d.orElse(TS_Log.of(TS_FileTxtUtils.class));
+    }
+    final private static StableValue<TS_Log> d = StableValue.of();
 
     public static byte[] getUTF8BOM() {
         return new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
@@ -71,7 +77,7 @@ public class TS_FileTxtUtils {
             if (!append) {//DO NOT DELETE THE CODEIT IS NEEDED
                 TS_FileUtils.deleteFileIfExists(destFile);
                 if (TS_FileUtils.isExistFile(destFile)) {
-                    TGS_FuncMTUUtils.thrw(d.className, "toFile", "Cannot Delete File " + destFile);
+                    TGS_FuncMTUUtils.thrw(d().className, "toFile", "Cannot Delete File " + destFile);
                 }
             }
             IntStream.range(0, sourceTexts.size()).forEachOrdered(i -> {
