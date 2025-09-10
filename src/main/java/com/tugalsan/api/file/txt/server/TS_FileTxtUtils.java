@@ -12,7 +12,6 @@ import com.tugalsan.api.function.client.maythrowexceptions.unchecked.TGS_FuncMTU
 import com.tugalsan.api.list.client.*;
 import com.tugalsan.api.stream.client.*;
 import com.tugalsan.api.string.client.*;
-import java.util.function.Supplier;
 
 public class TS_FileTxtUtils {
 
@@ -20,7 +19,7 @@ public class TS_FileTxtUtils {
 
     }
 
-    final private static Supplier<TS_Log> d = StableValue.supplier(() -> TS_Log.of(TS_FileTxtUtils.class));
+    final private static TS_Log d = TS_Log.of(TS_FileTxtUtils.class);
 
     public static byte[] getUTF8BOM() {
         return new byte[]{(byte) 0xEF, (byte) 0xBB, (byte) 0xBF};
@@ -75,7 +74,7 @@ public class TS_FileTxtUtils {
             if (!append) {//DO NOT DELETE THE CODEIT IS NEEDED
                 TS_FileUtils.deleteFileIfExists(destFile);
                 if (TS_FileUtils.isExistFile(destFile)) {
-                    TGS_FuncMTUUtils.thrw(d.get().className, "toFile", "Cannot Delete File " + destFile);
+                    TGS_FuncMTUUtils.thrw(d.className(), "toFile", "Cannot Delete File " + destFile);
                 }
             }
             IntStream.range(0, sourceTexts.size()).forEachOrdered(i -> {
