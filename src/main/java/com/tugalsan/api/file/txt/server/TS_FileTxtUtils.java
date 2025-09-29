@@ -1,17 +1,16 @@
 package com.tugalsan.api.file.txt.server;
 
+import module com.tugalsan.api.log;
+import module com.tugalsan.api.file;
+import module com.tugalsan.api.function;
+import module com.tugalsan.api.list;
+import module com.tugalsan.api.stream;
+import module com.tugalsan.api.string;
 import java.nio.charset.*;
 import java.nio.file.*;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.*;
-import com.tugalsan.api.log.server.*;
-import com.tugalsan.api.file.server.*;
-import com.tugalsan.api.function.client.maythrowexceptions.checked.TGS_FuncMTCUtils;
-import com.tugalsan.api.function.client.maythrowexceptions.unchecked.TGS_FuncMTUUtils;
-import com.tugalsan.api.list.client.*;
-import com.tugalsan.api.stream.client.*;
-import com.tugalsan.api.string.client.*;
 
 public class TS_FileTxtUtils {
 
